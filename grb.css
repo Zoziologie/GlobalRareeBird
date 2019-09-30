@@ -15,6 +15,7 @@ html, body {
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     width: 360px;
     background: white;
+        z-index: 2000;
 }
 #sidebar-header{
 	background: #DB4437;
@@ -27,7 +28,7 @@ html, body {
 	position: absolute;
     top: 8px;
     left: 360px;
-    z-index: 2;
+    z-index: 2000;
 }
 .collapse-sidebar-button{
 	width: 23px;
@@ -80,8 +81,6 @@ html, body {
 }
 .obs-detail{
     font-size: small;
-    padding-left: 10px;
-    padding-bottom: 5px;
 }
 .button-obs:hover{
     background-color: #f7f7f7;
@@ -153,4 +152,26 @@ a:visited {
 }
 #filter-specie{
     font-size: medium;
+}
+#mymodal{
+    padding-left: 360px;
+}
+.modal-content{
+    background: none;
+    border: none;
+}
+#waait{
+    color: #FABF5D;
+}
+.modal-dialog{
+    width: fit-content;
+    top: calc(50% - 48px);
+}
+.modal-body{
+    font-size: xx-large;
+    font-weight: bold;
+    color: #FABF5D;
+}
+#filter-specie-gr{
+    max-width: 100%;
 }
