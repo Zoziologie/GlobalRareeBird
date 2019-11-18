@@ -8,9 +8,6 @@ html, body {
     height: 100%;
     z-index: 1;
 }
-#panel{
-
-}
 #sidebar{
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     width: 360px;
@@ -56,6 +53,11 @@ html, body {
     padding: 18px 24px 0;
 }
 .country-added-div{
+	font-size: 13px;
+    line-height: 18px;
+    padding: 0 24px;
+}
+.country-added-link{
 	font-size: 13px;
     line-height: 18px;
     padding: 0 24px 18px;
@@ -154,7 +156,7 @@ a:visited {
     font-size: medium;
 }
 #mymodal{
-    padding-left: 360px;
+    padding-left: 360px !important;
 }
 .modal-content{
     background: none;
@@ -165,13 +167,17 @@ a:visited {
 }
 .modal-dialog{
     width: fit-content;
-    top: calc(50% - 48px);
+    top: calc(50% - 136px);
 }
 .modal-body{
     font-size: xx-large;
     font-weight: bold;
     color: #FABF5D;
 }
-#filter-specie-gr{
-    max-width: 100%;
+#filter-specie-gr, #filter-specie{
+    width: 348px;
+}
+.badge{
+    color: white !important;
+    margin-right: 3px;
 }
