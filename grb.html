@@ -13,8 +13,8 @@ plugins:
 - leaflet-providers
 - no_default_script
 - font-awesome
+- moment.js
 ---
-
 
 <div class="d-flex h-100">
 	<div id="sidebar" class="d-flex flex-column h-100 collapse show">
@@ -30,21 +30,28 @@ plugins:
 		</div>
 		<div class="country-added-div"><b>Countries added: </b></div>
 		<div class="country-added-link">
-			<a href="" class="badge badge-secondary" onclick='copyURL();return false;' >
+			<a href="#" class="badge badge-secondary cursor-pointer" onclick='copyURL();return false;' >
 				<i class="fas fa-paperclip"></i> Copy url	
 			</a>
-			<a href="" class="badge badge-secondary" onclick='window.location = window.location.pathname;return false;' >
+			<a href="#" class="badge badge-secondary" onclick='window.location = window.location.pathname;return false;' >
 				<i class="fas fa-trash"></i> Remove all	
 			</a>
 		</div>
 		<div class="form-inline" id="filter">
-			<b>Filter</b>
+			<b>Filter: </b> 
 			<div class="form-group">
-				<label for="formControlRange"><span id="range-value">30 </span>days ago</label>
-				<input type="range" class="form-control-range" id="formControlRange" min="0" max="30" value="30">
+				<label for="formControlRange"><span id="range-value">5 </span>days ago</label>
+				<input type="range" class="form-control-range" id="formControlRange" min="0" max="30" value="5">
+				<label><input type="checkbox" id="camera"><i class="fas fa-lg fa-camera obs-icon"></i></label>
 			</div>
 			<div class="form-group" id="filter-specie-gr">
 				<select class="form-control form-control-sm" id="filter-specie"><option selected value="0" >All species</option></select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<button class="btn btn-sm" id="sort-date"><i class="fas fa-sort"></i> Date</button>
+				<button class="btn btn-sm" id="sort-specie"><i class="fas fa-sort"></i> Specie</button>
 			</div>
 		</div>
 		<div class="row-obs" id="app-obs">
@@ -56,9 +63,9 @@ plugins:
 			<!--<a href="https://github.com/Zoziologie/GlobalRareeBird"><i class="fab fa-github"></i></a>-->
 		</div>
 	</div>
-	<div class="collapse-sidebar">
+	<!--<div class="collapse-sidebar">
 		<button class="collapse-sidebar-button" data-toggle="collapse" href="#sidebar" data-toggle="tooltip" data-placement="right" title="Collapse panel"> <i id="caret" class="fas fa-caret-left"></i></button> 
-	</div>
+	</div>-->
 	<div class="h-100 flex-grow-1">
 		<div id="map"></div>
 		<div id="mymodal" class="modal fade" tabindex="-1" role="dialog">

@@ -3,11 +3,13 @@ var cntr= [["AF","Afghanistan"],["AL","Albania"],["DZ","Algeria"],["AS","America
 var cntr_us = [["US-AL","Alabama"],["US-AK","Alaska"],["US-AZ","Arizona"],["US-AR","Arkansas"],["US-CA","California"],["US-CO","Colorado"],["US-CT","Connecticut"],["US-DE","Delaware"],["US-DC","District of Columbia"],["US-FL","Florida"],["US-GA","Georgia"],["US-HI","Hawaii"],["US-ID","Idaho"],["US-IL","Illinois"],["US-IN","Indiana"],["US-IA","Iowa"],["US-KS","Kansas"],["US-KY","Kentucky"],["US-LA","Louisiana"],["US-ME","Maine"],["US-MD","Maryland"],["US-MA","Massachusetts"],["US-MI","Michigan"],["US-MN","Minnesota"],["US-MS","Mississippi"],["US-MO","Missouri"],["US-MT","Montana"],["US-NE","Nebraska"],["US-NV","Nevada"],["US-NH","New Hampshire"],["US-NJ","New Jersey"],["US-NM","New Mexico"],["US-NY","New York"],["US-NC","North Carolina"],["US-ND","North Dakota"],["US-OH","Ohio"],["US-OK","Oklahoma"],["US-OR","Oregon"],["US-PA","Pennsylvania"],["US-RI","Rhode Island"],["US-SC","South Carolina"],["US-SD","South Dakota"],["US-TN","Tennessee"],["US-TX","Texas"],["US-UT","Utah"],["US-VT","Vermont"],["US-VA","Virginia"],["US-WA","Washington"],["US-WV","West Virginia"],["US-WI","Wisconsin"],["US-WY","Wyoming"]];
 var cntr_ca = [["CA-AB","Alberta"],["CA-BC","British Columbia"],["CA-MB","Manitoba"],["CA-NB","New Brunswick"],["CA-NL","Newfoundland and Labrador"],["CA-NT","Northwest Territories"],["CA-NS","Nova Scotia"],["CA-NU","Nunavut"],["CA-ON","Ontario"],["CA-PE","Prince Edward Island"],["CA-QC","Quebec"],["CA-SK","Saskatchewan"],["CA-YT","Yukon Territory"]]
 
-function addRegion(regionCode,callback) {
+function addRegion(regionCode, callback) {
 	$('#ebirddata').hide();$('#markeronmap').hide();$('#mymodal').modal('show');
 	cntr_sel.push(regionCode)
 	window.history.pushState("", "", "/globalrareebird?r="+ cntr_sel.join(','));
-	$(".country-added-div").append( '<span class="badge badge-primary" id="'+regionCode+'">' + $("#countrySelect option[value='"+regionCode+"']").text()+'</span>')
+	$(".country-added-div").append( '<span class="badge badge-primary" id="'+regionCode+'">' + $("#countrySelect option[value='"+regionCode+"']").text()
+		+ '<a href="#" onclick="removeCntr(\''+regionCode+'\');return false;"><i class="fas fa-times"></i></a>'
+		+ '</span>')
 	$("#countrySelect option[value='"+regionCode+"']").remove();
 	$("#countrySelect").val('0');
 	$('#ebirddata').show();
@@ -18,7 +20,6 @@ function addRegion(regionCode,callback) {
 		"headers": {"X-eBirdApiToken": "vcs68p4j67pt"},
 	}).done(function (observations) {
 		$('#markeronmap').show();
-		console.log(observations)
 		var id = observations.map(item => item.obsId);
 		observations = observations.filter( (val,index,self) => id.indexOf(val.obsId) === index )
 
@@ -26,6 +27,10 @@ function addRegion(regionCode,callback) {
 		var item =''
 
 		observations.forEach(function(obs, idx, array) {
+			var dayago = moment().startOf('day').diff(moment(obs.obsDt).startOf('day'), 'days');
+			var timeago = moment().diff(moment(obs.obsDt));
+
+			obs.howMany = obs.howMany == undefined ? 'X' : obs.howMany;
 
 			var pop = '<span class="obs-min-name">'+obs.howMany+' '+obs.comName+'</span>';
 			pop += obs.hasRichMedia ? '<i class="fas fa-lg fa-camera obs-icon"></i>':"";
@@ -41,6 +46,10 @@ function addRegion(regionCode,callback) {
 			var m = L.marker([obs.lat, obs.lng], {
 				title: obs.comName,
 				id: obs.obsId,
+				regionCode : regionCode,
+				dayago : dayago,
+				camera : obs.hasRichMedia,
+				spCode : obs.speciesCode,
 				icon:L.icon({
 					iconUrl: "https://zoziologie.raphaelnussbaumer.com/assets/Merge2Hotspot/images/hotspot-icon_perso_small.png",
 					iconAnchor: [12, 34],
@@ -51,8 +60,7 @@ function addRegion(regionCode,callback) {
 				minWidth : 350
 			}).addTo(markers)
 
-			var dayago = Math.floor((new Date()-new Date(obs.obsDt))/(1000*60*60*24));
-			item += '<button class="button-obs" id="button-'+obs.obsId+'" daysago="'+dayago+'" spCode="'+obs.speciesCode+'" onclick="center(\''+obs.obsId+'\')">';
+			item += '<button class="button-obs" id="button-'+obs.obsId+'" daysago="'+dayago+'" timeago="'+timeago+'" camera="'+obs.hasRichMedia+'" regionCode="'+regionCode+'" spCode="'+obs.speciesCode+'" onclick="center(\''+obs.obsId+'\')">';
 			item += '<div class="obs-min">';
 			item += '<span class="obs-min-name">'+obs.howMany+' '+obs.comName+'</span>';
 			item += obs.hasRichMedia ? '<i class="fas fa-camera obs-icon"></i>':"";
@@ -77,24 +85,34 @@ function addRegion(regionCode,callback) {
 			}
 
 			if (idx === array.length - 1){ 
-				map.fitBounds(markers.getBounds());
+				count_cntr += -1
+				/*map.fitBounds(markers.getBounds());
 				setTimeout(function(){
     				$('#mymodal').modal('hide');
-				}, 1000);
+				}, 1000);*/
+				if (count_cntr ==0){
+					callback();
+				}
 			}
 		});
 		$('#app-obs').append(item); 
 
 		if (observations.length==0){
-			setTimeout(function(){
+			count_cntr += -1
+			/*setTimeout(function(){
+				filter()
 				$('#mymodal').modal('hide');
-			}, 1000);
-			alert('No rare bird for this region! Try another one')
+			}, 1000);*/
+			alert('No rare bird for the region: '+regionCode+'! Try another one')
+			if (count_cntr ==0){
+				callback();
+			}
 		}
 		//var spe_list = observations.map(e => e.comName);
 		//var spe_list = spe_list.filter((value, index, self) => self.indexOf(value) === index);
 	});
 }
+
 
 function center(id){
 	var m = markers.getLayers().find( (l) => l.options.id==id);
@@ -103,25 +121,79 @@ function center(id){
 
 function filter(){
 	var daysago =  parseFloat($('#formControlRange').val());
-	$('#range-value').html(daysago)
 	var specie = $('#filter-specie').val();
+	var camera =  $('#camera').is(':checked');
 	$('.button-obs').each(function(e){
-		if (specie=='0'){
-			sp = true
-		} else {
-			sp = this.getAttribute('spcode') == specie
-		}
-		var da = parseFloat(this.getAttribute('daysago')) < daysago ;
-		if ( sp & da){
+		var sp = specie=='0' ? true : (this.getAttribute('spcode') == specie)
+		var da = parseFloat(this.getAttribute('daysago')) <= daysago ;
+		var ca = camera ? this.getAttribute('camera')=='true' : true
+		if ( sp & da & ca ){
 			this.hidden=false
 		} else{
 			this.hidden=true
 		}
 	})
+	markers.eachLayer( function(l){
+		var ca = camera ? l.options.camera : true;
+		var sp = specie=='0' ? true : (l.options.spCode == specie)
+		if ( l.options.dayago > daysago | !ca | !sp ){
+			l.addTo(markers_hide)
+			l.removeFrom(markers)
+		}
+	})
+	markers_hide.eachLayer( function(l){
+		var ca = camera ? l.options.camera : true
+		var sp = specie=='0' ? true : (l.options.spCode == specie)
+		if ( l.options.dayago <= daysago & ca & sp){
+			l.addTo(markers)
+			l.removeFrom(markers_hide)
+		}
+	})
 }
 
 
-var cntr_sel=[], map, markers, win;
+function copyURL(){
+	var dummy = document.createElement('input'),
+    text = window.location.href;
+	document.body.appendChild(dummy);
+	dummy.value = text;
+	dummy.select();
+	document.execCommand('copy');
+	document.body.removeChild(dummy);
+}
+
+function removeCntr(rc){
+	$('.button-obs').each(function(e){
+		if ( this.getAttribute('regionCode') == rc){
+			jQuery(this).remove();
+		}
+	})
+	markers.eachLayer( function(l){
+		if ( l.options.regionCode == rc){
+			l.removeFrom(markers)
+		}
+	})
+	markers_hide.eachLayer( function(l){
+		if ( l.options.regionCode == rc){
+			l.removeFrom(markers_hide)
+		}
+	})
+	$('#'+rc).remove()
+	cntr_sel.splice(cntr_sel.indexOf(rc), 1);
+	window.history.pushState("", "", "/globalrareebird?r="+ cntr_sel.join(','));
+	map.fitBounds(markers.getBounds());
+}
+
+function initMap(){
+	map.fitBounds(markers.getBounds());
+	setTimeout(function(){
+		$('#mymodal').modal('hide');
+	}, 1000);
+}
+
+
+
+var cntr_sel=[], map, markers, markers_hide, count_cntr;
 
 $( document ).ready(function() {
 
@@ -145,6 +217,7 @@ $( document ).ready(function() {
 			})
 		}
 	}).addTo(map);
+	markers_hide = L.layerGroup();
 
 	$.each(cntr, function (i, item) {
 		if (item[0] == 'sub'){
@@ -172,7 +245,8 @@ $( document ).ready(function() {
 	});
 
 	$('#countrySelect').change(function(){
-		addRegion($('#countrySelect').val())
+		count_cntr=1;
+		addRegion($('#countrySelect').val(), initMap)
 	});
 
 	$('#sidebar').on('hidden.bs.collapse', function (e) {
@@ -199,13 +273,37 @@ $( document ).ready(function() {
 
 	var tmp = window.location.href.split('?r=')[1]
 	if (tmp){
-		tmp.split(',').forEach(addRegion)
+		var cntr_list = tmp.split(',');
+		count_cntr = cntr_list.length;
+		cntr_list.forEach(function(r){
+			addRegion(r,initMap)
+		})
 	}
 
 	$('#formControlRange').on('change',filter)
 
 	$('#filter-specie').change(filter);
-	
+	$('#camera').change(filter);
+	$('#formControlRange').on("input change", function(){
+		$('#range-value').html(parseFloat($('#formControlRange').val()))
+	});
+
+	$('#sort-specie').on('click',function(){
+		var result = $('.button-obs').sort(function (a, b) {
+			var contentA = $(a).attr('spcode');
+			var contentB =  $(b).attr('spcode');
+			return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+		});
+		$('#app-obs').html(result)
+	})
+	$('#sort-date').on('click',function(){
+		var result = $('.button-obs').sort(function (a, b) {
+			var contentA = Number($(a).attr('timeago'));
+			var contentB =  Number($(b).attr('timeago'));
+			return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+		});
+		$('#app-obs').html(result)
+	})
 });
 
 
