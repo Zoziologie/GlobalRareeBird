@@ -38,7 +38,7 @@ function addRegion(regionCode, callback) {
 			pop += '<a href="https://ebird.org/view/checklist/'+obs.subId+'" target="_blank"><i class="fas fa-link obs-icon"></i></a><br>';
 			pop += '<ul class="fa-ul">'
 			pop += '<li><span class="fa-li"><i class="fas fa-calendar obs-icon"></i></span>' + obs.obsDt + '</li>';
-			pop += '<li><span class="fa-li"><img class="hotspot-icon" src="https://zoziologie.raphaelnussbaumer.com/assets/Merge2Hotspot/images/hotspot-icon-hotspot_small.png"/></span>';
+			pop += '<li><span class="fa-li"><img class="hotspot-icon" src="/assets/Merge2Hotspot/images/hotspot-icon-hotspot_small.png"/></span>';
 			pop += obs.locationPrivate ? obs.locName :  '<a href="https://ebird.org/hotspot/'+obs.locId+'"  target="_blank">'+obs.locName+'</a>';
 			pop += '<a href="https://www.google.com/maps/search/?api=1&query='+obs.lat+','+obs.lng+'" target="_blank"><i class="fas fa-map obs-icon"></i></a></li>';
 			pop += '<li><span class="fa-li"><i class="fas fa-binoculars obs-icon"></i></span>' + obs.userDisplayName + '</li>';
@@ -51,7 +51,7 @@ function addRegion(regionCode, callback) {
 				camera : obs.hasRichMedia,
 				spCode : obs.speciesCode,
 				icon:L.icon({
-					iconUrl: "https://zoziologie.raphaelnussbaumer.com/assets/Merge2Hotspot/images/hotspot-icon_perso_small.png",
+					iconUrl: "/assets/Merge2Hotspot/images/hotspot-icon_perso_small.png",
 					iconAnchor: [12, 34],
 					popupAnchor: [0, -34],
 				})
@@ -71,7 +71,7 @@ function addRegion(regionCode, callback) {
 			item += '</div>';
 			item += '<div class="obs-detail collapse" id="div-'+obs.obsId+'"><ul class="fa-ul">'
 			item += '<li><span class="fa-li"><i class="fas fa-calendar obs-icon"></i></span>' + obs.obsDt + '</li>';
-			item += '<li><span class="fa-li"><img class="hotspot-icon" src="https://zoziologie.raphaelnussbaumer.com/assets/Merge2Hotspot/images/hotspot-icon-hotspot_small.png"/></span>'
+			item += '<li><span class="fa-li"><img class="hotspot-icon" src="/assets/Merge2Hotspot/images/hotspot-icon-hotspot_small.png"/></span>'
 			item += obs.locationPrivate ? obs.locName :  '<a href="https://ebird.org/hotspot/'+obs.locId+'"  target="_blank">'+obs.locName+'</a>';
 			item += '</li><li><span class="fa-li"><i class="fas fa-binoculars obs-icon"></i></span> ' + obs.userDisplayName + '</li>';
 			item += '</ul></div></button>';
@@ -200,7 +200,7 @@ $( document ).ready(function() {
 	map = new L.Map('map');
 	map.fitWorld().zoomIn();
 	control = L.control.layers({
-		'MapBox': L.tileLayer.provider('MapBox', {id: 'rafnuss.npl3amec',accessToken: token.mapbox}).addTo(map),
+		'MapBox': L.tileLayer.provider('MapBox', {id: 'mapbox/streets-v11', accessToken:token.mapbox}).addTo(map),
 		'OpenStreetMap': L.tileLayer.provider('OpenStreetMap.Mapnik'),
 		'Satellite': L.tileLayer.provider('Esri.WorldImagery')
 	}, null, { collapsed: false	}).addTo(map);
@@ -211,7 +211,7 @@ $( document ).ready(function() {
 		maxClusterRadius:50,
 		iconCreateFunction: function(cluster) {
 			return L.icon({
-				iconUrl: "https://zoziologie.raphaelnussbaumer.com/assets/Merge2Hotspot/images/hotspot-icon-hotspot-plus_small.png",
+				iconUrl: "/assets/Merge2Hotspot/images/hotspot-icon-hotspot-plus_small.png",
 				iconAnchor: [12, 30],
 				popupAnchor: [0, -12],
 			})
