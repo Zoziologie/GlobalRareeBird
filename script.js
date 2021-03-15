@@ -6,7 +6,7 @@ var cntr_ca = [["CA-AB","Alberta"],["CA-BC","British Columbia"],["CA-MB","Manito
 function addRegion(regionCode, callback) {
 	$('#ebirddata').hide();$('#markeronmap').hide();$('#mymodal').modal('show');
 	cntr_sel.push(regionCode)
-	window.history.pushState("", "", "/globalrareebird?r="+ cntr_sel.join(','));
+	window.history.pushState("", "", "/global-rare-ebird?r="+ cntr_sel.join(','));
 	$(".country-added-div").append( '<span class="badge badge-primary" id="'+regionCode+'">' + $("#countrySelect option[value='"+regionCode+"']").text()
 		+ '<a href="#" onclick="removeCntr(\''+regionCode+'\');return false;"><i class="fas fa-times"></i></a>'
 		+ '</span>')
@@ -38,7 +38,7 @@ function addRegion(regionCode, callback) {
 			pop += '<a href="https://ebird.org/view/checklist/'+obs.subId+'" target="_blank"><i class="fas fa-link obs-icon"></i></a><br>';
 			pop += '<ul class="fa-ul">'
 			pop += '<li><span class="fa-li"><i class="fas fa-calendar obs-icon"></i></span>' + obs.obsDt + '</li>';
-			pop += '<li><span class="fa-li"><img class="hotspot-icon" src="/assets/Merge2Hotspot/images/hotspot-icon-hotspot_small.png"/></span>';
+			pop += '<li><span class="fa-li"><img class="hotspot-icon" src="/assets/hotspot-icon-hotspot_small.png"/></span>';
 			pop += obs.locationPrivate ? obs.locName :  '<a href="https://ebird.org/hotspot/'+obs.locId+'"  target="_blank">'+obs.locName+'</a>';
 			pop += '<a href="https://www.google.com/maps/search/?api=1&query='+obs.lat+','+obs.lng+'" target="_blank"><i class="fas fa-map obs-icon"></i></a></li>';
 			pop += '<li><span class="fa-li"><i class="fas fa-binoculars obs-icon"></i></span>' + obs.userDisplayName + '</li>';
@@ -51,7 +51,7 @@ function addRegion(regionCode, callback) {
 				camera : obs.hasRichMedia,
 				spCode : obs.speciesCode,
 				icon:L.icon({
-					iconUrl: "/assets/Merge2Hotspot/images/hotspot-icon_perso_small.png",
+					iconUrl: "/assets/hotspot-icon_perso_small.png",
 					iconAnchor: [12, 34],
 					popupAnchor: [0, -34],
 				})
@@ -71,7 +71,7 @@ function addRegion(regionCode, callback) {
 			item += '</div>';
 			item += '<div class="obs-detail collapse" id="div-'+obs.obsId+'"><ul class="fa-ul">'
 			item += '<li><span class="fa-li"><i class="fas fa-calendar obs-icon"></i></span>' + obs.obsDt + '</li>';
-			item += '<li><span class="fa-li"><img class="hotspot-icon" src="/assets/Merge2Hotspot/images/hotspot-icon-hotspot_small.png"/></span>'
+			item += '<li><span class="fa-li"><img class="hotspot-icon" src="/assets/hotspot-icon-hotspot_small.png"/></span>'
 			item += obs.locationPrivate ? obs.locName :  '<a href="https://ebird.org/hotspot/'+obs.locId+'"  target="_blank">'+obs.locName+'</a>';
 			item += '</li><li><span class="fa-li"><i class="fas fa-binoculars obs-icon"></i></span> ' + obs.userDisplayName + '</li>';
 			item += '</ul></div></button>';
@@ -180,7 +180,7 @@ function removeCntr(rc){
 	})
 	$('#'+rc).remove()
 	cntr_sel.splice(cntr_sel.indexOf(rc), 1);
-	window.history.pushState("", "", "/globalrareebird?r="+ cntr_sel.join(','));
+	window.history.pushState("", "", "/global-rare-ebird?r="+ cntr_sel.join(','));
 	map.fitBounds(markers.getBounds());
 }
 
@@ -211,7 +211,7 @@ $( document ).ready(function() {
 		maxClusterRadius:50,
 		iconCreateFunction: function(cluster) {
 			return L.icon({
-				iconUrl: "/assets/Merge2Hotspot/images/hotspot-icon-hotspot-plus_small.png",
+				iconUrl: "/assets/hotspot-icon-hotspot-plus_small.png",
 				iconAnchor: [12, 30],
 				popupAnchor: [0, -12],
 			})
