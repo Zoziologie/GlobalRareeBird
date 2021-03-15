@@ -6,7 +6,7 @@ var cntr_ca = [["CA-AB","Alberta"],["CA-BC","British Columbia"],["CA-MB","Manito
 function addRegion(regionCode, callback) {
 	$('#ebirddata').hide();$('#markeronmap').hide();$('#mymodal').modal('show');
 	cntr_sel.push(regionCode)
-	window.history.pushState("", "", "/global-rare-ebird?r="+ cntr_sel.join('|'));
+	window.history.pushState("", "", "/global-rare-ebird?r="+ cntr_sel.join('_'));
 	$(".country-added-div").append( '<span class="badge badge-primary" id="'+regionCode+'">' + $("#countrySelect option[value='"+regionCode+"']").text()
 		+ '<a href="#" onclick="removeCntr(\''+regionCode+'\');return false;"><i class="fas fa-times"></i></a>'
 		+ '</span>')
@@ -180,7 +180,7 @@ function removeCntr(rc){
 	})
 	$('#'+rc).remove()
 	cntr_sel.splice(cntr_sel.indexOf(rc), 1);
-	window.history.pushState("", "", "/global-rare-ebird?r="+ cntr_sel.join('|'));
+	window.history.pushState("", "", "/global-rare-ebird?r="+ cntr_sel.join('_'));
 	map.fitBounds(markers.getBounds());
 }
 
@@ -273,7 +273,7 @@ $( document ).ready(function() {
 
 	var tmp = window.location.href.split('?r=')[1]
 	if (tmp){
-		var cntr_list = tmp.split('|');
+		var cntr_list = tmp.split('_');
 		count_cntr = cntr_list.length;
 		cntr_list.forEach(function(r){
 			addRegion(r,initMap)
